@@ -5,9 +5,9 @@
     <div class="flex items-center justify-between p-4 border-b">
       <div>
         <h3 class="text-xl font-semibold text-gray-900">
-          Create New News
+          Create Product
         </h3>
-        <p class="text-sm text-gray-600 mt-1">Share your football news and stories with the community</p>
+        <p class="text-sm text-gray-600 mt-1">Add a new product to the archive</p>
       </div>
       <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onclick="hideModal()">
         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -18,35 +18,43 @@
     </div>
     <!-- Modal body -->
     <div class="px-6 py-4 space-y-6 form-style">
-      <form id="newsForm">
+      <form id="productForm">
         <div class="mb-4">
-          <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-          <input type="text" id="title" name="title" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter news title" required>
+          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+          <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product name" required>
         </div>
         <div class="mb-4">
-          <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
-          <textarea id="content" name="content" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter news content" required></textarea>
+          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea id="description" name="description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product description" required></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+          <input type="number" id="price" name="price" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product price" required>
         </div>
         <div class="mb-4">
           <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
           <select id="category" name="category" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" required>
             <option value="">Choose a category</option>
-            <option value="transfer">Transfer</option>
-            <option value="update">Update</option>
-            <option value="exclusive">Exclusive</option>
-            <option value="match">Match</option>
-            <option value="rumor">Rumor</option>
-            <option value="analysis">Analysis</option>
+            <option value="jersey">Jerseys</option>
+            <option value="shorts">Shorts</option>
+            <option value="shoes">Football Boots</option>
+            <option value="socks">Socks</option>
+            <option value="ball">Football</option>
+            <option value="goalkeeper">Goalkeeper Gear</option>
+            <option value="training">Training Equipment</option>
+            <option value="bag">Bags</option>
+            <option value="accessories">Accessories</option>
+            <option value="fan_merch">Fan Merchandise</option>
           </select>
         </div>
         <div class="mb-4">
-          <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail URL</label>
+          <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail</label>
           <input type="url" id="thumbnail" name="thumbnail" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="https://example.com/image.jpg">
         </div>
         <div class="mb-4">
           <div class="flex items-center">
             <input id="is_featured" name="is_featured" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            <label for="is_featured" class="ml-2 text-sm font-medium text-gray-900">Featured News</label>
+            <label for="is_featured" class="ml-2 text-sm font-medium text-gray-900">Featured</label>
           </div>
         </div>
       </form>
@@ -54,55 +62,7 @@
     <!-- Modal footer -->
     <div class="flex flex-col sm:flex-row gap-4 p-6 border-t border-gray-200 rounded-b">
       <button type="button" id="cancelButton" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors text-center" onclick="hideModal()">Cancel</button>
-      <button type="submit" id="submitNews" form="newsForm" class="order-1 sm:order-2 flex-1 bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors">Publish News</button>
+      <button type="submit" id="submitProduct" form="productForm" class="order-1 sm:order-2 flex-1 bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors">Publish Product</button>
     </div>
   </div>
 </div>
-
-<script>
-  function showModal() {
-      const modal = document.getElementById('crudModal');
-      const modalContent = document.getElementById('crudModalContent');
-
-      modal.classList.remove('hidden'); 
-      setTimeout(() => {
-        modalContent.classList.remove('opacity-0', 'scale-95');
-        modalContent.classList.add('opacity-100', 'scale-100');
-      }, 50); 
-  }
-
-  function hideModal() {
-      const modal = document.getElementById('crudModal');
-      const modalContent = document.getElementById('crudModalContent');
-
-      modalContent.classList.remove('opacity-100', 'scale-100');
-      modalContent.classList.add('opacity-0', 'scale-95');
-
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 150); 
-  }
-
-  async function addNewsEntry() {
-    await fetch("{% url 'main:add_news_entry_ajax' %}", {
-      method: "POST",
-      body: new FormData(document.querySelector('#newsForm')),
-    })
-
-    document.getElementById("newsForm").reset();
-    hideModal();
-      
-    // Show toast notification
-    showToast('News added successfully!', '', 'success');
-
-    // Dispatch custom event to notify main.html about new data
-    document.dispatchEvent(new CustomEvent('newsAdded'));
-
-    return false;
-  }
-
-  document.getElementById("newsForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    addNewsEntry();
-    })
-</script>
